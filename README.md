@@ -1,21 +1,14 @@
 # Feeb
 
-**TODO: Add description**
+Fibonacci REST JSON API
 
-## Installation
+1. `GET /:n` An endpoint that returns the value from the Fibonacci sequence for a given number.
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `feeb` to your list of dependencies in `mix.exs`:
+2. `GET /list/:n?last_key=:k&size=:s` An endpoint that returns a list of numbers and the corresponding values from the Fibonacci sequence from 1 to N with support for pagination. Page size should be parameterized with a default
+of 100.
 
-```elixir
-def deps do
-  [
-    {:feeb, "~> 0.1.0"}
-  ]
-end
-```
+3. `PUT /blacklist/:n` An endpoint to blacklist a number to permanently stop it from being shown in Fibonacci results
+when requested. The blacklisted numbers should persist in application state.
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/feeb](https://hexdocs.pm/feeb).
+4. `DELETE /blacklist/:n` An endpoint to remove a number from the blacklist.
 
