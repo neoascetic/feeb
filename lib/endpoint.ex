@@ -18,14 +18,9 @@ defmodule Feeb.Endpoint do
             "Requested #{size} items starting with #{next_key}; " <>
             "generating up to #{gen_limit}")
         full = Feeb.fiblist(gen_limit)
-        slice = Enum.slice(full, next_key, size)
-        response0 =
-          case gen_limit do
-            ^i -> %{}
-            _ -> %{next_key: gen_limit + 1}
-          end
-        response1 = Map.merge(response0, %{result: slice})
-        respond(conn_params, 200, response1)
+        page = Enum.slice(full, next_key, size)
+        response = maybe_add_next_key(i, gen_limit, %{result: page})
+        respond(conn_params, 200, response)
       {:error, _, _} ->
         respond(conn_params, 400, %{error: "#{n} is invalid number"})
       {_, :error, _} ->
@@ -38,7 +33,32 @@ defmodule Feeb.Endpoint do
   get "/:n" do
     case validate_num(n) do
       {:ok, i} ->
-        respond(conn, 200, %{result: Feeb.fib(i)})
+        case Feeb.fib(i) do
+          {:ok, fib} ->
+            respond(conn, 200, %{result: fib})
+          {:error, :blacklisted} ->
+            respond(conn, 403, %{error: :blacklisted})
+        end
+      :error ->
+        respond(conn, 400, %{error: "#{n} is invalid number"})
+    end
+  end
+
+  put "/blacklist/:n" do
+    case validate_num(n) do
+      {:ok, i} ->
+        :ok = Feeb.put_to_blacklist(i)
+        respond(conn, 204)
+      :error ->
+        respond(conn, 400, %{error: "#{n} is invalid number"})
+    end
+  end
+
+  delete "/blacklist/:n" do
+    case validate_num(n) do
+      {:ok, i} ->
+        :ok = Feeb.delete_from_blacklist(i)
+        respond(conn, 204)
       :error ->
         respond(conn, 400, %{error: "#{n} is invalid number"})
     end
@@ -50,9 +70,16 @@ defmodule Feeb.Endpoint do
 
   # internal stuff
 
+  defp maybe_add_next_key(max, max, acc) do acc end
+  defp maybe_add_next_key(_max, gen_limit, acc) do
+    Map.merge(acc, %{next_key: gen_limit + 1})
+  end
+
+
   defp validate_num(n) when is_integer(n) and n >= 0 do
     {:ok, n}
   end
+
 
   defp validate_num(n) do
     case Integer.parse(n) do
@@ -61,9 +88,15 @@ defmodule Feeb.Endpoint do
     end
   end
 
-  defp respond(conn, code, data) do
-    {:ok, result} = JSON.encode(data)
+
+  defp respond(conn, code, data \\ nil) do
     newconn = Plug.Conn.put_resp_header(conn, "Content-Type", "application/json")
-    send_resp(newconn, code, result)
+    send_resp(newconn, code, maybe_encode_result(data))
+  end
+
+  defp maybe_encode_result(nil) do "" end
+  defp maybe_encode_result(data) do
+    {:ok, result} = JSON.encode(data)
+    result
   end
 end

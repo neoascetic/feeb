@@ -1,4 +1,4 @@
-.PHONY: shell
+.PHONY: tests
 
 get-deps:
 	mix deps.get

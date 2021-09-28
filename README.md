@@ -26,8 +26,20 @@ Params:
 Request: `curl http://localhost:4001/list/42?next_key=2&size=3`
 Response: `{"result": [1, 2, 3], "next_key": 5}`
 
-3. `PUT /blacklist/:n` An endpoint to blacklist a number to permanently stop it from being shown in Fibonacci results
-when requested. The blacklisted numbers should persist in application state.
+3. `PUT /blacklist/:n`
 
-4. `DELETE /blacklist/:n` An endpoint to remove a number from the blacklist.
+> An endpoint to blacklist a number to permanently stop it from being shown in Fibonacci results when requested. The blacklisted numbers should persist in application state.
 
+  - `:n` (non negative integer) - the Nth Fibonacci number
+
+Request: `curl PUT http://localhost:4001/blacklist/42`
+Response: `204 No Content`
+
+4. `DELETE /blacklist/:n`
+
+> An endpoint to remove a number from the blacklist.
+
+  - `:n` (non negative integer) - the Nth Fibonacci number
+
+Request: `curl DELETE http://localhost:4001/blacklist/42`
+Response: `204 No Content`
