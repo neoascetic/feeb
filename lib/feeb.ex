@@ -15,12 +15,14 @@ defmodule Feeb do
 
   ## Examples
 
-      iex> Feeb.fib(5)
+      iex> Feeb.fib(6)
       {:ok, 8}
-      iex> Feeb.add_to_blacklist(5)
+      iex> Feeb.put_to_blacklist(6)
       :ok
-      iex> Feeb.fib(5)
+      iex> Feeb.fib(6)
       {:error, :blacklisted}
+      iex> Feeb.delete_from_blacklist(6)
+      :ok
 
   """
 
@@ -44,6 +46,12 @@ defmodule Feeb do
 
       iex> Feeb.fiblist(6)
       [0, 1, 1, 2, 3, 5, 8]
+      iex> Feeb.put_to_blacklist(2)
+      :ok
+      iex> Feeb.fiblist(6)
+      [0, 1, 2, 3, 5, 8]
+      iex> Feeb.delete_from_blacklist(2)
+      :ok
 
   """
   def fiblist(n) when n >= 0 do

@@ -90,7 +90,7 @@ defmodule Feeb.Endpoint do
 
 
   defp respond(conn, code, data \\ nil) do
-    newconn = Plug.Conn.put_resp_header(conn, "Content-Type", "application/json")
+    newconn = Plug.Conn.put_resp_header(conn, "content-type", "application/json")
     send_resp(newconn, code, maybe_encode_result(data))
   end
 

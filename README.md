@@ -1,6 +1,8 @@
-# Feeb
+# Feeb 🥩
 
 Fibonacci REST JSON API
+
+# API
 
 1. `GET /:n`
 
@@ -11,6 +13,7 @@ Params:
   - `:n` (non negative integer) - the requested Nth Fibonacci number
 
 Request: `curl http://localhost:4001/6`
+
 Response: `{"result": 8}`
 
 2. `GET /list/:n?next_key=:k&size=:s`
@@ -24,6 +27,7 @@ Params:
   - `:s` (non negative integer) - optional (default: `100`) value of the number of results per one page
 
 Request: `curl http://localhost:4001/list/42?next_key=2&size=3`
+
 Response: `{"result": [1, 2, 3], "next_key": 5}`
 
 3. `PUT /blacklist/:n`
@@ -33,6 +37,7 @@ Response: `{"result": [1, 2, 3], "next_key": 5}`
   - `:n` (non negative integer) - the Nth Fibonacci number
 
 Request: `curl PUT http://localhost:4001/blacklist/42`
+
 Response: `204 No Content`
 
 4. `DELETE /blacklist/:n`
@@ -42,4 +47,13 @@ Response: `204 No Content`
   - `:n` (non negative integer) - the Nth Fibonacci number
 
 Request: `curl DELETE http://localhost:4001/blacklist/42`
+
 Response: `204 No Content`
+
+# Tests
+
+To run tests, make sure elixir is installed and run
+
+```
+make tests
+```
