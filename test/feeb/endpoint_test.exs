@@ -72,7 +72,8 @@ defmodule Feeb.EndpointTest do
 
     {code, response} = request(:get, "/list/6")
     assert code == 200
-    assert response == %{"result" => [0, 1, 2, 3, 5]} # 2nd and 6th are missing
+    # 2nd and 6th are missing
+    assert response == %{"result" => [0, 1, 2, 3, 5]}
 
     {code, response} = request(:delete, "/blacklist/6")
     assert code == 204
@@ -82,7 +83,8 @@ defmodule Feeb.EndpointTest do
 
     {code, response} = request(:get, "/list/6")
     assert code == 200
-    assert response == %{"result" => [0, 1, 2, 3, 5, 8]} # 2nd still missing
+    # 2nd still missing
+    assert response == %{"result" => [0, 1, 2, 3, 5, 8]}
   end
 
   defp request(method, path, query \\ %{}) do
@@ -90,13 +92,13 @@ defmodule Feeb.EndpointTest do
     conn = Feeb.Endpoint.call(conn, @opts)
     assert Enum.member?(conn.resp_headers, {"content-type", "application/json"})
     assert conn.state == :sent
+
     response =
       case JSON.decode(conn.resp_body) do
         {:ok, decoded} -> decoded
         {:error, _} -> ""
       end
+
     {conn.status, response}
   end
-
 end
-

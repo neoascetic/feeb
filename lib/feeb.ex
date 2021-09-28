@@ -31,12 +31,12 @@ defmodule Feeb do
       true ->
         Logger.warning("Someone tried to get the prohibited value of #{n}!")
         {:error, :blacklisted}
+
       false ->
-        [f|_] = calc_fiblist(n)
+        [f | _] = calc_fiblist(n)
         {:ok, f}
     end
   end
-
 
   @doc """
   List all Fibonacci numbers until the given.
@@ -59,7 +59,6 @@ defmodule Feeb do
     filter_and_reverse(list, n, [])
   end
 
-
   @doc """
   Put a number to blacklist to hide from the results.
 
@@ -73,7 +72,6 @@ defmodule Feeb do
     Logger.info("Blacklisting #{n}")
     Feeb.Blacklist.put(n)
   end
-
 
   @doc """
   Delete a number from blacklist to show again in the results.
@@ -89,30 +87,38 @@ defmodule Feeb do
     Feeb.Blacklist.delete(n)
   end
 
-
   # internal functions
 
-  defp filter_and_reverse([], _n, acc) do acc end
-  defp filter_and_reverse([head|tail], n, acc) do
+  defp filter_and_reverse([], _n, acc) do
+    acc
+  end
+
+  defp filter_and_reverse([head | tail], n, acc) do
     # depending on how we're tolerant to the consistency,
     # we could also first get the current state of the blacklist
     # and filter against it to not block the main blacklist
-    newacc = 
+    newacc =
       case Feeb.Blacklist.member?(n) do
         true -> acc
-        false -> [head|acc]
+        false -> [head | acc]
       end
-    filter_and_reverse(tail, n-1, newacc)
+
+    filter_and_reverse(tail, n - 1, newacc)
   end
 
-  defp calc_fiblist(0) do [0] end
+  defp calc_fiblist(0) do
+    [0]
+  end
+
   defp calc_fiblist(n) do
-    calc_fiblist(n-1, [1, 0])
+    calc_fiblist(n - 1, [1, 0])
   end
 
-  defp calc_fiblist(0, acc) do acc end
-  defp calc_fiblist(n, [n1, n2 | _tail]=acc) do
-    calc_fiblist(n-1, [n1 + n2 | acc])
+  defp calc_fiblist(0, acc) do
+    acc
   end
 
+  defp calc_fiblist(n, [n1, n2 | _tail] = acc) do
+    calc_fiblist(n - 1, [n1 + n2 | acc])
+  end
 end
