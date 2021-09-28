@@ -57,9 +57,9 @@ defmodule Feeb.EndpointTest do
   end
 
   test "test blacklist workflow" do
-    {code, response} = request(:put, "/blacklist/2")
+    {code, _response} = request(:put, "/blacklist/2")
     assert code == 204
-    {code, response} = request(:put, "/blacklist/6")
+    {code, _response} = request(:put, "/blacklist/6")
     assert code == 204
 
     {code, response} = request(:get, "/2")
@@ -75,7 +75,7 @@ defmodule Feeb.EndpointTest do
     # 2nd and 6th are missing
     assert response == %{"result" => [0, 1, 2, 3, 5]}
 
-    {code, response} = request(:delete, "/blacklist/6")
+    {code, _response} = request(:delete, "/blacklist/6")
     assert code == 204
     {code, response} = request(:get, "/6")
     assert code == 200
